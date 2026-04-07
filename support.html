@@ -13,10 +13,7 @@
     }
     .container { max-width: 680px; margin: 0 auto; padding: 0 24px; }
     header { padding: 48px 0 0; text-align: center; }
-    .logo {
-      font-size: 32px; font-weight: 800; letter-spacing: -1px;
-      font-style: italic; opacity: 0.95; text-decoration: none; color: #fff;
-    }
+    .logo img { height: 102px; opacity: 0.95; }
     .content { padding: 48px 0 64px; }
     .content h1 { font-size: 32px; font-weight: 800; letter-spacing: -1px; margin-bottom: 8px; }
     .content .subtitle { font-size: 16px; color: rgba(255,255,255,0.5); margin-bottom: 40px; }
@@ -35,6 +32,32 @@
       font-size: 18px; font-weight: 700; color: #fff; margin-top: 8px;
     }
     .contact-card p { color: rgba(255,255,255,0.5); font-size: 14px; }
+    .contact-form { margin-bottom: 48px; }
+    .contact-form input,
+    .contact-form textarea {
+      width: 100%; padding: 14px 16px; margin-bottom: 12px;
+      background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 10px; color: #fff; font-size: 15px;
+      font-family: inherit; outline: none; transition: border-color 0.2s;
+    }
+    .contact-form input::placeholder,
+    .contact-form textarea::placeholder { color: rgba(255,255,255,0.35); }
+    .contact-form input:focus,
+    .contact-form textarea:focus { border-color: rgba(255,255,255,0.4); }
+    .contact-form textarea { min-height: 120px; resize: vertical; }
+    .contact-form button {
+      width: 100%; padding: 14px; background: #fff; color: #2c245b;
+      font-size: 16px; font-weight: 700; border: none; border-radius: 10px;
+      cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .contact-form button:hover {
+      transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+    .contact-form .success-msg {
+      display: none; text-align: center; padding: 20px;
+      background: rgba(255,255,255,0.08); border-radius: 10px;
+      color: rgba(255,255,255,0.8); font-size: 15px;
+    }
     .faq-item {
       background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
       border-radius: 12px; padding: 20px; margin-bottom: 12px;
@@ -55,17 +78,23 @@
 <body>
   <div class="container">
     <header>
-      <a href="index.html" class="logo">nabbit</a>
+      <a href="index.html" class="logo"><img src="nabbit-logo-handwritten.svg" alt="nabbit"></a>
     </header>
 
     <section class="content">
       <h1>Get help with Nabbit</h1>
       <p class="subtitle">We're here to help. Reach out anytime.</p>
 
-      <div class="contact-card">
-        <p>Email us at</p>
-        <div class="email"><a href="mailto:support@getnabbit.app">support@getnabbit.app</a></div>
-        <p style="margin-top: 8px;">We usually respond within 24 hours.</p>
+      <div class="contact-form" id="contact-form">
+        <form action="https://api.web3forms.com/submit" method="POST" id="form">
+          <input type="hidden" name="access_key" value="4cbfb04e-520d-4617-9579-bdfd35768d61">
+          <input type="hidden" name="subject" value="Nabbit Support Request">
+          <input type="text" name="name" placeholder="Your name" required>
+          <input type="email" name="email" placeholder="Your email" required>
+          <textarea name="message" placeholder="How can we help?" required></textarea>
+          <button type="submit">Send message</button>
+        </form>
+        <div class="success-msg" id="success-msg">Thanks! We'll get back to you within 24 hours.</div>
       </div>
 
       <h2>Frequently Asked Questions</h2>
@@ -95,9 +124,26 @@
       <div class="footer-links">
         <a href="index.html">Home</a>
         <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Service</a>
       </div>
       <p>&copy; 2026 Nabbit. All rights reserved.</p>
     </footer>
   </div>
+  <script>
+    const form = document.getElementById('form');
+    const successMsg = document.getElementById('success-msg');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(Object.fromEntries(new FormData(form)))
+      });
+      if (res.ok) {
+        form.style.display = 'none';
+        successMsg.style.display = 'block';
+      }
+    });
+  </script>
 </body>
 </html>
