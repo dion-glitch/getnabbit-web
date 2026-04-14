@@ -51,55 +51,58 @@
 
     <section class="content">
       <h1>Privacy Policy</h1>
-      <p class="updated">Last updated: April 6, 2026</p>
+      <p class="updated">Last updated: April 14, 2026</p>
 
       <h2>Data controller</h2>
-      <p>Nabbit is responsible for the processing of your personal data as described in this policy. You can reach us at <a href="mailto:support@getnabbit.app">support@getnabbit.app</a>.</p>
+      <p>The data controller responsible for the processing of your personal data as described in this policy is:</p>
+      <ul>
+        <li>[BUSINESS NAME — e.g. "Nabbit / Dion Appelbom, enskild firma"]</li>
+        <li>[P.O. BOX ADDRESS — e.g. "Box 1234, 111 22 Stockholm, Sweden"]</li>
+        <li>Email: <a href="mailto:support@getnabbit.app">support@getnabbit.app</a></li>
+      </ul>
 
       <h2>Overview</h2>
-      <p>Nabbit is designed with privacy as its core principle. Your data belongs to you and stays on your device. We do not collect, store, or sell your personal information.</p>
+      <p>Nabbit is designed with privacy as its core principle. Items you save stay on your device. We do not create user accounts, we do not track you, and we do not sell or share your data.</p>
 
-      <h2>What data is stored</h2>
-      <p>All items you save in Nabbit (addresses, phone numbers, WiFi passwords, dates, amounts, and custom categories) are stored locally on your iPhone using SQLite. This data never leaves your device unless you explicitly choose to share it.</p>
+      <h2>What data is stored on your device</h2>
+      <p>All items you save in Nabbit (addresses, phone numbers, WiFi passwords, dates, amounts, and custom categories) are stored locally on your iPhone using SQLite. This data never leaves your device except as described below.</p>
       <ul>
         <li>Saved items (text, type, source app, sender, tags)</li>
         <li>Custom categories (name, color)</li>
-        <li>App preferences (onboarding status, Today tab opt-in)</li>
+        <li>App preferences (onboarding status, filters)</li>
       </ul>
 
-      <h2>Cloud services</h2>
-      <p>Nabbit uses the Claude API (by Anthropic) for two optional features:</p>
+      <h2>When data leaves your device</h2>
+      <p>Nabbit's core functionality is fully on-device. There are three specific features that may send data off-device, all of which route through our own Cloudflare Worker proxy so no third-party API key lives in the App:</p>
       <ul>
-        <li><strong>Smart classification:</strong> When you manually add an item, the text is sent to Claude to detect its type (date, address, phone, etc.) and generate a short title. This is optional and only happens when you tap "Save" in the add sheet.</li>
-        <li><strong>Today tab:</strong> If you opt in, item metadata may be sent to Claude to determine what's relevant for today.</li>
+        <li><strong>Automatic title summarization (Share Extension fallback):</strong> When you share text to Nabbit and our on-device regex cannot extract a clean title, the sanitized text is sent through our proxy to the Claude API (Anthropic) to generate a short title. This only happens when on-device extraction has nothing usable to offer.</li>
+        <li><strong>Today tab:</strong> If you open the Today tab, sanitized metadata from items saved in the last 7 days may be sent through our proxy to Claude to identify what's time-relevant today.</li>
+        <li><strong>Nabbit kort (shared cards):</strong> When you explicitly choose to share an item as a Nabbit kort link, the sanitized item text and type are stored on our Cloudflare D1 database for 30 days and are accessible via a unique link. This is the only feature that stores data outside your device, and it only happens when you actively tap "Share as Nabbit kort".</li>
       </ul>
-      <p>Before any text is sent to the API, Nabbit's sanitizer removes sensitive information including credit card numbers, personal identification numbers, and passwords. Raw text is never sent — only sanitized metadata when possible.</p>
-      <p>We do not store any data on external servers. Claude API processes requests in real-time and does not retain your data.</p>
+      <p>Before any text leaves the device, Nabbit's sanitizer removes sensitive patterns: credit card numbers, Swedish personal identification numbers (personnummer), passwords, PIN codes, BankID references, and CVV/security codes. The same sanitizer runs again on our server as a second line of defense.</p>
 
       <h2>Legal basis for processing</h2>
       <p>Under the GDPR, we process your data on the following legal bases:</p>
       <ul>
-        <li><strong>Contract performance:</strong> Storing your items locally and providing search functionality — this is the core service you use the App for.</li>
-        <li><strong>Legitimate interest:</strong> Smart classification of items via the Claude API, to automatically detect the type of information you save.</li>
-        <li><strong>Consent:</strong> The Today tab feature, which you explicitly opt in to. You can withdraw consent at any time in Settings.</li>
+        <li><strong>Contract performance:</strong> Storing items locally and providing search — the core service you install the App for.</li>
+        <li><strong>Legitimate interest:</strong> Using Claude for title summarization when on-device regex fails, so items have readable titles in your library.</li>
+        <li><strong>Consent:</strong> The Today tab and Nabbit kort features — used only when you actively open the tab or tap the share button.</li>
       </ul>
 
-      <h2>International data transfers</h2>
-      <p>When you use features powered by third-party APIs, your data may be transferred to the United States:</p>
+      <h2>International data transfers and processors</h2>
+      <p>When you use features that rely on third-party services, data may be transferred outside the EU/EEA. The following processors are used:</p>
       <ul>
-        <li><strong>Anthropic (Claude API):</strong> Sanitized item metadata for classification and the Today tab.</li>
-        <li><strong>Google (Gemini Live API):</strong> Audio data for voice features (Pro/Pro+ plans).</li>
+        <li><strong>Cloudflare, Inc. (USA):</strong> Operates our Claude API proxy (Workers) and hosts shared Nabbit kort (D1 database). Processes sanitized item text and metadata. Cloudflare Workers run on a global edge network.</li>
+        <li><strong>Anthropic PBC (USA):</strong> Processes sanitized text sent through our proxy for title summarization (Share Extension fallback) and the Today tab. Anthropic does not use API traffic for model training.</li>
+        <li><strong>Web3Forms (Statichunt, USA):</strong> Processes your name, email, and message when you contact support via the web form.</li>
       </ul>
-      <p>These transfers are protected by the service providers' data processing agreements and EU Standard Contractual Clauses (SCCs). Only sanitized data is sent — never raw text containing sensitive information.</p>
-
-      <h2>Voice features</h2>
-      <p>If you use the Voice feature (Pro/Pro+ plans), audio is sent to Google's Gemini Live API for processing. Audio is processed in real-time and is not stored by Nabbit or retained by Google beyond the session.</p>
+      <p>These transfers are protected by the service providers' data processing agreements and EU Standard Contractual Clauses (SCCs). Only sanitized data is sent — never raw text containing patterns that our sanitizer is configured to filter.</p>
 
       <h2>Siri integration</h2>
-      <p>Nabbit integrates with Siri Shortcuts to allow voice-activated search. Siri processes your voice command on-device. Nabbit only receives the search query text, not your audio.</p>
+      <p>Nabbit uses Apple's App Intents framework to let you search your saved items by voice ("Hey Siri, search Nabbit for WiFi"). Siri processes your voice command on-device. Nabbit only receives the final search query text, not your audio. Nothing is sent to our servers for Siri searches.</p>
 
       <h2>Share Extension</h2>
-      <p>When you share text to Nabbit from another app, the text is processed locally on your device to extract information. No data is sent to any external service during this process.</p>
+      <p>When you share text to Nabbit from another app, the text is first processed locally on your device using regex patterns to extract addresses, phone numbers, WiFi credentials, dates, amounts, and other structured data. If — and only if — the on-device extractor cannot produce a usable title, the sanitized text is sent via our Cloudflare Worker proxy to the Claude API to generate a short title (see "When data leaves your device" above). The original raw text is always stored locally on your device regardless.</p>
 
       <h2>Data we do NOT collect</h2>
       <ul>
