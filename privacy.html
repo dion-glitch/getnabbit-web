@@ -51,93 +51,112 @@
 
     <section class="content">
       <h1>Privacy Policy</h1>
-      <p class="updated">Last updated: April 14, 2026</p>
+      <p class="updated">Last updated: April 15, 2026 · Version 1.0</p>
 
-      <h2>Data controller</h2>
-      <p>The data controller responsible for the processing of your personal data as described in this policy is:</p>
+      <h2>We don't collect your data</h2>
+      <p>This is the core principle of Nabbit: we have no way of knowing who you are, what you save, or how you use the app — because that information never reaches us.</p>
+
+      <h2>Data Controller</h2>
+      <p>Nabbit is developed and operated by:</p>
       <ul>
-        <li>[BUSINESS NAME — e.g. "Nabbit / Dion Appelbom, enskild firma"]</li>
-        <li>[P.O. BOX ADDRESS — e.g. "Box 1234, 111 22 Stockholm, Sweden"]</li>
+        <li>Dion Appelbom</li>
+        <li>Sturegatan 25, 172 31 Sundbyberg, Sweden</li>
         <li>Email: <a href="mailto:support@getnabbit.app">support@getnabbit.app</a></li>
+        <li>Web: <a href="https://getnabbit.app">getnabbit.app</a></li>
       </ul>
 
-      <h2>Overview</h2>
-      <p>Nabbit is designed with privacy as its core principle. Items you save stay on your device. We do not create user accounts, we do not track you, and we do not sell or share your data.</p>
-
-      <h2>What data is stored on your device</h2>
-      <p>All items you save in Nabbit (addresses, phone numbers, WiFi passwords, dates, amounts, and custom categories) are stored locally on your iPhone using SQLite. This data never leaves your device except as described below.</p>
+      <h2>What is stored on your device</h2>
+      <p>Nabbit stores the following locally within the iOS sandbox on your device:</p>
       <ul>
-        <li>Saved items (text, type, source app, sender, tags)</li>
-        <li>Custom categories (name, color)</li>
-        <li>App preferences (onboarding status, filters)</li>
+        <li>Your saved items (text, type, date, category) in a SQLite database</li>
+        <li>A JSON copy of your items for Siri integration, in the App Group container</li>
+        <li>A temporary file used by the Share Extension during import</li>
+        <li>Your preferences (onboarding status, language setting)</li>
       </ul>
+      <p>These files are encrypted by iOS when your device is locked (hardware encryption). No raw data leaves your device as part of core functionality.</p>
 
-      <h2>When data leaves your device</h2>
-      <p>Nabbit's core functionality is fully on-device. There are three specific features that may send data off-device, all of which route through our own Cloudflare Worker proxy so no third-party API key lives in the App:</p>
+      <h2>Data that leaves your device</h2>
+      <p>There are three situations in which data may leave your device. All three either require an explicit action from you, or occur transparently as a necessary part of a feature you actively use.</p>
+
+      <h2>A) AI title summarization and Today analysis (Claude)</h2>
+      <p>When you save text that Nabbit cannot categorize automatically via pattern matching, a sanitized text snippet (max 4,000 characters) is sent to our Cloudflare Worker proxy, which forwards it to Anthropic (Claude Haiku). The same flow powers the daily summary in the Today tab.</p>
       <ul>
-        <li><strong>Automatic title summarization (Share Extension fallback):</strong> When you share text to Nabbit and our on-device regex cannot extract a clean title, the sanitized text is sent through our proxy to the Claude API (Anthropic) to generate a short title. This only happens when on-device extraction has nothing usable to offer.</li>
-        <li><strong>Today tab:</strong> If you open the Today tab, sanitized metadata from items saved in the last 7 days may be sent through our proxy to Claude to identify what's time-relevant today.</li>
-        <li><strong>Nabbit kort (shared cards):</strong> When you explicitly choose to share an item as a Nabbit kort link, the sanitized item text and type are stored on our Cloudflare D1 database for 30 days and are accessible via a unique link. This is the only feature that stores data outside your device, and it only happens when you actively tap "Share as Nabbit kort".</li>
+        <li><strong>What is filtered out:</strong> Card numbers, national ID numbers, passwords, PIN codes, BankID numbers, and CVV codes — stripped on your device and again in the proxy before any API call is made.</li>
+        <li><strong>Retention:</strong> Nothing is stored. The Worker logs no request bodies. Anthropic processes data under a zero-retention API agreement and acts as a data processor.</li>
+        <li><strong>Authentication:</strong> Requests are protected by a secret token header and rate-limited to 30 requests per 60 seconds per IP.</li>
       </ul>
-      <p>Before any text leaves the device, Nabbit's sanitizer removes sensitive patterns: credit card numbers, Swedish personal identification numbers (personnummer), passwords, PIN codes, BankID references, and CVV/security codes. The same sanitizer runs again on our server as a second line of defense.</p>
 
-      <h2>Legal basis for processing</h2>
-      <p>Under the GDPR, we process your data on the following legal bases:</p>
+      <h2>B) Nabbit Cards (shared links)</h2>
+      <p>If you actively choose to share an item as a Nabbit Card (a public link at getnabbit.app/kort/), the item text and type are sent to our Cloudflare Workers service and stored temporarily in a D1 database.</p>
       <ul>
-        <li><strong>Contract performance:</strong> Storing items locally and providing search — the core service you install the App for.</li>
-        <li><strong>Legitimate interest:</strong> Using Claude for title summarization when on-device regex fails, so items have readable titles in your library.</li>
-        <li><strong>Consent:</strong> The Today tab and Nabbit kort features — used only when you actively open the tab or tap the share button.</li>
+        <li><strong>No sender info:</strong> No user ID, device identifier, or IP address is linked to the card.</li>
+        <li><strong>Automatic deletion:</strong> Cards are automatically deleted after 30 days.</li>
+        <li><strong>Sanitization:</strong> The same filters described above run before storage.</li>
+        <li><strong>Opt-in only:</strong> Nothing is shared unless you explicitly tap "Share as Card".</li>
       </ul>
 
-      <h2>International data transfers and processors</h2>
-      <p>When you use features that rely on third-party services, data may be transferred outside the EU/EEA. The following processors are used:</p>
+      <h2>C) Support form</h2>
+      <p>If you submit a message via the support form at getnabbit.app, it is forwarded via Web3Forms to <a href="mailto:support@getnabbit.app">support@getnabbit.app</a>. No information is sent unless you actively fill in and submit the form.</p>
+
+      <h2>What we do not collect</h2>
+      <p>Nabbit contains none of the following:</p>
       <ul>
-        <li><strong>Cloudflare, Inc. (USA):</strong> Operates our Claude API proxy (Workers) and hosts shared Nabbit kort (D1 database). Processes sanitized item text and metadata. Cloudflare Workers run on a global edge network.</li>
-        <li><strong>Anthropic PBC (USA):</strong> Processes sanitized text sent through our proxy for title summarization (Share Extension fallback) and the Today tab. Anthropic does not use API traffic for model training.</li>
-        <li><strong>Web3Forms (Statichunt, USA):</strong> Processes your name, email, and message when you contact support via the web form.</li>
+        <li>Analytics (no Firebase, Amplitude, Mixpanel, PostHog, or similar)</li>
+        <li>Crash reporting (no Sentry, Bugsnag, or similar)</li>
+        <li>Ad networks, third-party cookies, or device fingerprinting</li>
+        <li>IDFA, device identifiers, or persistent IP logging</li>
+        <li>Accounts — we never collect your email address, name, or password</li>
+        <li>Location data (exception: the "Open in Maps" feature sends a location directly from your device to Apple Maps — no location data reaches Nabbit)</li>
       </ul>
-      <p>These transfers are protected by the service providers' data processing agreements and EU Standard Contractual Clauses (SCCs). Only sanitized data is sent — never raw text containing patterns that our sanitizer is configured to filter.</p>
 
-      <h2>Siri integration</h2>
-      <p>Nabbit uses Apple's App Intents framework to let you search your saved items by voice ("Hey Siri, search Nabbit for WiFi"). Siri processes your voice command on-device. Nabbit only receives the final search query text, not your audio. Nothing is sent to our servers for Siri searches.</p>
-
-      <h2>Share Extension</h2>
-      <p>When you share text to Nabbit from another app, the text is first processed locally on your device using regex patterns to extract addresses, phone numbers, WiFi credentials, dates, amounts, and other structured data. If — and only if — the on-device extractor cannot produce a usable title, the sanitized text is sent via our Cloudflare Worker proxy to the Claude API to generate a short title (see "When data leaves your device" above). The original raw text is always stored locally on your device regardless.</p>
-
-      <h2>Data we do NOT collect</h2>
+      <h2>Third-party services</h2>
       <ul>
-        <li>We do not collect analytics or usage data</li>
-        <li>We do not use tracking or advertising frameworks</li>
-        <li>We do not create user accounts or profiles</li>
-        <li>We do not access your contacts, photos, or other apps</li>
-        <li>We do not sell or share your data with third parties</li>
+        <li><strong>Anthropic (Claude Haiku)</strong> — Title summarization, Today analysis. Data sent: sanitized text snippet, no identifiers.</li>
+        <li><strong>Cloudflare Workers / D1</strong> — AI proxy, Nabbit Cards, website, email routing. See sections above.</li>
+        <li><strong>Apple (App Store, Siri, App Intents)</strong> — Distribution, voice control, on-device embeddings. Handled within iOS — no data reaches Nabbit.</li>
+        <li><strong>Web3Forms</strong> — Contact form on the website. Only the fields you submit.</li>
+        <li><strong>RevenueCat (planned)</strong> — Subscription management. Apple's anonymous purchase token.</li>
       </ul>
 
-      <h2>How to delete your data</h2>
-      <p>You can delete individual items by swiping left on any item in the library. To delete all data at once, go to Settings > Data > Delete all data. This permanently removes all saved items and categories from your device.</p>
-      <p>Since no data is stored externally, deleting data from the app removes it completely.</p>
+      <h2>Your rights</h2>
+      <p>Because almost all data lives locally on your device, you have full control at all times.</p>
 
-      <h2>Your rights under GDPR</h2>
-      <p>If you are in the EU/EEA, you have the following rights regarding your personal data:</p>
+      <h2>Access and export</h2>
+      <p>All your data is on your device. You can export your items at any time directly in the app via Settings → Export Data.</p>
+
+      <h2>Deletion</h2>
+      <p>You can delete individual items within the app. Uninstalling the app permanently deletes all data. We hold no copies (with the exception of active Nabbit Cards, which auto-delete within 30 days).</p>
+
+      <h2>Portability</h2>
+      <p>The in-app export function gives you your data in a machine-readable format, satisfying the right to data portability under GDPR and equivalent laws.</p>
+
+      <h2>EU / UK users (GDPR & UK GDPR)</h2>
+      <p>You have the right to access, rectify, erase, restrict processing of, and object to processing of your personal data. Given that we hold virtually no personal data about you, most of these rights are exercised directly on your device. For any requests or questions, contact us at <a href="mailto:support@getnabbit.app">support@getnabbit.app</a>. We will respond within 30 days. You also have the right to lodge a complaint with your local data protection authority. For EU users, you may use the EU Online Dispute Resolution platform at <a href="https://ec.europa.eu/consumers/odr">ec.europa.eu/consumers/odr</a>.</p>
+
+      <h2>California residents (CCPA / CPRA)</h2>
+      <p>We do not sell or share personal information for cross-context behavioral advertising. You have the right to know what personal information is collected, to request deletion, and to opt out of sale (not applicable here). To exercise your rights, contact <a href="mailto:support@getnabbit.app">support@getnabbit.app</a>.</p>
+
+      <h2>Children</h2>
+      <p>Nabbit is not directed at children under the age of 13 (or under 16 where required by local law). We do not knowingly collect personal information from children. If you believe a child has submitted information via the support form, please contact us and we will delete it promptly.</p>
+
+      <h2>Security</h2>
       <ul>
-        <li><strong>Access:</strong> Request a copy of the data we process about you.</li>
-        <li><strong>Rectification:</strong> Request correction of inaccurate data.</li>
-        <li><strong>Erasure:</strong> Request deletion of your data (you can also do this directly in the App).</li>
-        <li><strong>Restriction:</strong> Request that we limit how we process your data.</li>
-        <li><strong>Data portability:</strong> Request your data in a machine-readable format.</li>
-        <li><strong>Objection:</strong> Object to processing based on legitimate interest.</li>
+        <li>All on-device data is protected by the iOS sandbox and hardware encryption</li>
+        <li>All network requests use HTTPS / TLS</li>
+        <li>The Anthropic API key is never bundled in the app — it is stored as a Cloudflare Worker Secret</li>
+        <li>Sanitization filters (client- and server-side) remove card numbers, national IDs, passwords, PINs, BankID numbers, and CVV codes before any external call</li>
       </ul>
-      <p>Since all your data is stored locally on your device, most of these rights are already in your hands. To exercise any of these rights, contact us at <a href="mailto:support@getnabbit.app">support@getnabbit.app</a>.</p>
-      <p>You also have the right to lodge a complaint with a supervisory authority. In Sweden, this is Integritetsskyddsmyndigheten (IMY) — <a href="https://www.imy.se">imy.se</a>.</p>
-
-      <h2>Children's privacy</h2>
-      <p>Nabbit is not directed at children under 13, in accordance with the Swedish implementation of GDPR Article 8. We do not knowingly collect information from children.</p>
 
       <h2>Changes to this policy</h2>
-      <p>We may update this policy from time to time. Changes will be posted on this page with an updated date.</p>
+      <p>If we make material changes we will notify you via an in-app message at the next app update. The date of the latest revision is always shown at the top of this page. Continued use of the app after a change constitutes acceptance of the updated policy.</p>
 
       <h2>Contact</h2>
-      <p>If you have questions about this privacy policy, contact Nabbit at <a href="mailto:support@getnabbit.app">support@getnabbit.app</a>.</p>
+      <ul>
+        <li>Dion Appelbom</li>
+        <li>Sturegatan 25, 172 31 Sundbyberg, Sweden</li>
+        <li>Email: <a href="mailto:support@getnabbit.app">support@getnabbit.app</a></li>
+        <li>Web: <a href="https://getnabbit.app">getnabbit.app</a></li>
+      </ul>
     </section>
 
     <footer>
@@ -146,7 +165,7 @@
         <a href="terms.html">Terms of Service</a>
         <a href="support.html">Support</a>
       </div>
-      <p>&copy; 2026 Nabbit. All rights reserved.</p>
+      <p>&copy; 2026 Dion Appelbom · Nabbit</p>
     </footer>
   </div>
 </body>
